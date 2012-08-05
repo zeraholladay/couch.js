@@ -1,0 +1,12 @@
+{
+    "name": "couch.js"
+  , "version": "0.0.1"
+  , "private": true
+  , "dependencies": {
+      "mocha": ">= 0",
+      "jshint" : ">= 0",
+      "jquery" : ">= 0",
+      "underscore" : ">= 0",
+      "backbone" : ">= 0"
+  }
+}
