@@ -1,7 +1,7 @@
 {
     "env" : {
         "default" : {
-            "db" : "http://localhost:5984/test"
+            "db" : "http://zera:123@localhost:5984/test"
         },
         "prod" : {
            "db" : "https://username:password@zera.cloudant.com/test"

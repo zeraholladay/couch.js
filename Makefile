@@ -1,4 +1,5 @@
 COUCH='http://localhost:5984/test'
+JSHINT=node_modules/.bin/jshint
 
 setup:
 	npm install
@@ -8,11 +9,11 @@ clean:
 
 .PHONY:
 test: setup
-	node_modules/.bin/jshint couch.js
-	node_modules/.bin/jshint test/test.js
+	$(JSHINT) couch.js
+	$(JSHINT) test/test.js
 	curl -XDELETE $(COUCH)
 	curl -XPUT $(COUCH)
-	for f in $$(ls test_data/*.json); do \
-	  curl -XPOST $(COUCH) -H "Content-type: application/json" -d@$$f; \
-	done
+	cp node_modules/mocha/mocha.css couchapp/_attachments/css/
+	cp node_modules/mocha/mocha.js couchapp/_attachments/js/
+	couchapp push couchapp/ default
 	node_modules/.bin/mocha --ui tdd
