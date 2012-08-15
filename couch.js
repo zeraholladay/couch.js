@@ -35,12 +35,12 @@
         }
     });
 
+    //Define methods for sync
+
     var ajax_options = { 
         dataType: "json",
         contentType: "application/json"
     };   
-
-    //Define methods for sync
 
     Couch.Model.prototype._read = function(model, opts) {
         if (undefined === model.id) throw "Model has no ID";

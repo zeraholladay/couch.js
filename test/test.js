@@ -3,13 +3,14 @@ var jQuery = require("jquery");
 var Couch = require("../couch.js");
 
 var Model = Couch.Model.extend({
+    // returns the URL of the database
     urlRoot: 'http://localhost:5984/test'
 });
-
 
 suite('Collection from view', function() {
     var Collection = Couch.Collection.extend({
         model: Model,
+        // returns the URL of the couchdb view
         url: function() {
             return 'http://localhost:5984/test/_design/test/_view/collection?key=' + encodeURI('"test_collection"');
         }
