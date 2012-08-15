@@ -17,6 +17,46 @@
         Couch = {};
     }
 
+    //User stuff
+
+    Couch.User = function(url_prefix) {
+        this.url_prefix = url_prefix || '';
+        this.signup = function(username, password, opts) {
+            opts = opts || {};
+            var user_doc = {
+                _id : 'org.couchdb.user:' + username,
+                name: username,
+                password: password,
+                type: 'user',
+                roles: []
+            };
+            _.extend(opts, ajax_options, {
+                type: "POST",
+                url: this.url_prefix + '/_users',
+                data: JSON.stringify(user_doc)
+            });
+            return $.ajax(opts);
+        };
+        this.login = function(username, password, opts) {
+            opts = opts || {};
+            _.extend(opts, ajax_options, {
+                type: 'POST',
+                url: this.url_prefix + '/_session',
+                data: JSON.stringify({ name: username, password: password })
+            });
+            return $.ajax(opts);
+        };
+        this.logout = function(opts) {
+            opts = opts || {};
+            _.extend(opts, ajax_options, {
+                type: 'DELETE',
+                url: this.url_prefix + '/_session'
+//                data: { name: username, password: password }
+            });
+            return $.ajax(opts);
+        };
+    };
+
     //Extend Model
 
     Couch.Model = Backbone.Model.extend({

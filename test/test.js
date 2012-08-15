@@ -100,3 +100,42 @@ suite('Collection', function() {
         });
     });
 });
+
+suite('User', function() {
+    var user = new Couch.User('http://localhost:5984');
+
+    setup(function(done) {
+        user.signup('test', '123')
+            .done(function() {
+                done();
+            })
+            .fail(function() {
+                done();
+            });
+    });
+
+    teardown(function(done) {
+        user.logout().done(function() { done(); });
+    });
+
+    suite('.login()', function() {
+        test('should not fail.', function(done) {
+            user.login('test', '123')
+                .done(function() {
+                    done();
+                })
+                .fail(function() {
+                    assert(false);
+                });
+        });
+    });
+
+    suite('.logout()', function() {
+        test('should not fail.', function(done) {
+            user.logout()
+                .done(function() {
+                    done();
+                });
+        });
+    });
+});
