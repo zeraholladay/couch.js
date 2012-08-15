@@ -1,10 +1,9 @@
-var assert = require("assert");
-var jQuery = require("jquery");
-var Couch = require("../couch.js");
+// var assert = require("assert");
+// var jQuery = require("jquery");
+// var Couch = require("../couch.js");
 
 var Model = Couch.Model.extend({
-    // returns the URL of the database
-    urlRoot: 'http://localhost:5984/test'
+    urlRoot: '/test'
 });
 
 suite('Collection from view', function() {
@@ -12,7 +11,7 @@ suite('Collection from view', function() {
         model: Model,
         // returns the URL of the couchdb view
         url: function() {
-            return 'http://localhost:5984/test/_design/test/_view/collection?key=' + encodeURI('"test_collection"');
+            return '/test/_design/couchapp/_view/collection?key=' + encodeURI('"test_collection"');
         }
     });
 
