@@ -1,6 +1,15 @@
-// var assert = require("assert");
-// var jQuery = require("jquery");
-// var Couch = require("../couch.js");
+var AssertException = function(msg) { 
+    this.msg = msg;
+    this.toString = function() {
+        return 'Assert: ' + this.msg;
+    };
+};
+
+var assert = function(exp, message) {
+    if (!exp) {
+        throw new AssertException(message);
+    }
+};
 
 var Model = Couch.Model.extend({
     urlRoot: '/test'
