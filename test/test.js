@@ -130,12 +130,17 @@ suite('Collection', function() {
 
     });
 
-    teardown(function() {
+    teardown(function(done) {
         collection.forEach(function(model) {
             model.off('destroy');
             model.destroy();
         });
         collection = null;
+        var user = new Couch.User();
+        user.on('logout', function() {
+            done();
+        });
+        user.logout();
     });
 
     suite('model.destroy', function() {
@@ -172,43 +177,3 @@ suite('Collection', function() {
         });
     });
 });
-/*
-suite('User', function() {
-    var user = new Couch.User();
-
-    setup(function(done) {
-        user.signup('test', '123')
-            .done(function() {
-                done();
-            })
-            .fail(function() {
-                done();
-            });
-    });
-
-    teardown(function(done) {
-        user.logout().done(function() { done(); });
-    });
-
-    suite('.login()', function() {
-        test('should not fail.', function(done) {
-            user.login('test', '123')
-                .done(function() {
-                    done();
-                })
-                .fail(function() {
-                    assert(false);
-                });
-        });
-    });
-
-    suite('.logout()', function() {
-        test('should not fail.', function(done) {
-            user.logout()
-                .done(function() {
-                    done();
-                });
-        });
-    });
-});
-*/

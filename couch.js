@@ -46,7 +46,10 @@
                 type: 'DELETE',
                 url: this.url_prefix + '/_session'
             });
-            return $.ajax(opts);
+            var that = this;
+            return $.ajax(opts).done(function() {
+                that.trigger('logout');
+            });
         };
     };
 
