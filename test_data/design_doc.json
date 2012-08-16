@@ -1,9 +1,0 @@
-{
-   "_id": "_design/test",
-   "language": "javascript",
-   "views": {
-       "collection": {
-           "map": "function(doc) {\n    if (doc.type) {\n        emit(doc.type, doc);\n    }\n}"
-       }
-   }
-}
