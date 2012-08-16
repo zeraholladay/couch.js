@@ -18,18 +18,18 @@ var assert = function(exp, message) {
 var test_docs = [
     {
         "_id": "46755756ad993ec83e986891f000794c",
-        "_rev": "1-967a00dff5e02add41819138abb3284d",
-        "type": "test_collection"
+        "type": "test_collection",
+        "user": "test"
     }, 
     {
         "_id": "46755756ad993ec83e986891f0005a0e",
-        "_rev": "1-967a00dff5e02add41819138abb3284d",
-        "type": "test_collection"
+        "type": "test_collection",
+        "user": "test"
     },
     {
         "_id": "46755756ad993ec83e986891f000699f",
-        "_rev": "1-967a00dff5e02add41819138abb3284d",
-        "type": "test_collection"
+        "type": "test_collection",
+        "user": "test"
     }
 ];
 
@@ -50,28 +50,42 @@ suite('Collection fetched from a view', function() {
 
     setup(function(done) {
         collection = new Collection();
+
+        var user = new Couch.User();
+        var bootstrap = new Couch.Bootstrap();
+
         var docs = {
             all_or_nothing: true,
             docs: test_docs
         };
-        Couch.Bootstrap(docs, {url: '/test/_bulk_docs'})
-            .done(function() {
-                collection.on('reset', function() {
-                    this.off('reset');
-                    done();
-                });
-                collection.fetch();
-            });
+        collection.on('reset', function() {
+            this.off('reset');
+            done();
+        });
+        bootstrap.on('bootstrap', function() {
+            collection.fetch(); //fires reset
+        });
+        user.on('login', function() {
+            bootstrap.loader(docs, {url: '/test/_bulk_docs'});
+        });
+        user.login('test', '123');
     });
 
     teardown(function(done) {
+        var user = new Couch.User();
+        var bootstrap = new Couch.Bootstrap();
+
         var docs = {
             all_or_nothing: true,
             docs: _.map(test_docs, function(doc) {
                 return _.extend({_deleted: true}, doc);
             })
         };
-        Couch.Bootstrap(docs, {url: '/test/_bulk_docs'})
+        bootstrap.on('bootstrap', function() {
+            user.logout();
+        });
+
+        bootstrap.loader(docs, {url: '/test/_bulk_docs'})
             .done(function() {
                 done();
             });
@@ -86,7 +100,7 @@ suite('Collection fetched from a view', function() {
     suite('models', function() {
         test('should not have an _id, _rev, or ok attribute.', function() {
             var bool = collection.every(function(model) {
-                return (undefined === model.get("_id") &&
+                return (undefined === model.get("_id")  &&
                         undefined === model.get("_rev") &&
                         undefined === model.get("ok"));
             });
@@ -110,7 +124,7 @@ suite('Collection', function() {
             this.off('sync');
             done();
         });
-        collection.create({});
+        collection.create({user:'test'});
     });
 
     teardown(function() {
@@ -155,7 +169,7 @@ suite('Collection', function() {
         });
     });
 });
-
+/*
 suite('User', function() {
     var user = new Couch.User();
 
@@ -194,3 +208,4 @@ suite('User', function() {
         });
     });
 });
+*/

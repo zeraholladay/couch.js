@@ -35,9 +35,12 @@
                 url: this.url_prefix + '/_session',
                 data: JSON.stringify({ name: username, password: password })
             });
-            return $.ajax(opts);
+            var that = this;
+            return $.ajax(opts).done(function() {
+                that.trigger('login');
+            });
         };
-        this.logout = function(opts) {
+        this.logout = this.logoff = function(opts) {
             opts = opts || {};
             _.extend(opts, ajax_options, {
                 type: 'DELETE',
@@ -47,15 +50,22 @@
         };
     };
 
+    _.extend(Couch.User.prototype, Backbone.Events);
+
     //Bootstrap (useful for testing)
 
-    Couch.Bootstrap = function(docs, opts) {
-        _.extend(opts, ajax_options, {
-            type: 'POST',
-            data: JSON.stringify(docs)
-        });
-        return $.ajax(opts);
+    Couch.Bootstrap = function() {
+        this.loader = function(docs, opts) {
+            _.extend(opts, ajax_options, {
+                type: 'POST',
+                data: JSON.stringify(docs)
+            });
+            var that = this;
+            return $.ajax(opts).done(that.trigger('bootstrap'));
+        };
     };
+
+    _.extend(Couch.Bootstrap.prototype, Backbone.Events);
 
     //Extend Model
 
