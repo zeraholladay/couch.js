@@ -1,21 +1,12 @@
 (function() {
     var debug = true;
 
+    var ajax_options = { 
+        dataType: 'json',
+        contentType: 'application/json'
+    };   
+
     Couch = {};
-
-    //Node stuff for testing
-
-    // var isNode = (typeof module !== 'undefined' && module.exports) || false;
-
-    // if (isNode) {
-    //     $ = require("jquery");
-    //     _ = require("underscore");
-    //     Backbone = require("backbone");
-    //     Backbone.setDomLibrary($);
-    //     Couch = exports;
-    // } else {
-    //     Couch = {};
-    // }
 
     //User stuff
 
@@ -31,7 +22,7 @@
                 roles: []
             };
             _.extend(opts, ajax_options, {
-                type: "POST",
+                type: 'POST',
                 url: this.url_prefix + '/_users',
                 data: JSON.stringify(user_doc)
             });
@@ -56,6 +47,16 @@
         };
     };
 
+    //Bootstrap (useful for testing)
+
+    Couch.Bootstrap = function(docs, opts) {
+        _.extend(opts, ajax_options, {
+            type: 'POST',
+            data: JSON.stringify(docs)
+        });
+        return $.ajax(opts);
+    };
+
     //Extend Model
 
     Couch.Model = Backbone.Model.extend({
@@ -65,7 +66,7 @@
                 delete json.ok;
             }
             for (var key in json) {
-                if (key.indexOf("_") === 0) {
+                if (key.indexOf('_') === 0) {
                     json[key.substr(1)] = json[key];
                     delete json[key];
                 }
@@ -76,16 +77,11 @@
 
     //Define methods for sync
 
-    var ajax_options = { 
-        dataType: "json",
-        contentType: "application/json"
-    };   
-
     Couch.Model.prototype._read = function(model, opts) {
-        if (undefined === model.id) throw "Model has no ID";
-        var url = this.urlRoot + "/" + encodeURIComponent(model.id);
+        if (undefined === model.id) throw 'Model has no ID';
+        var url = this.urlRoot + '/' + encodeURIComponent(model.id);
         _.extend(opts, ajax_options, {
-            type: "GET",
+            type: 'GET',
             url: url
         });
         return $.ajax(opts);
@@ -93,7 +89,7 @@
 
     Couch.Model.prototype._create = function(model, opts) {
         _.extend(opts, ajax_options, {
-            type: "POST",
+            type: 'POST',
             url: this.urlRoot,
             data: JSON.stringify(model.toJSON())
         });
@@ -105,21 +101,21 @@
         json._id = json.id; delete json.id;
         json._rev = json.rev; delete json.rev;
         _.extend(opts, ajax_options, {
-            type: "PUT",
-            url: this.urlRoot + "/" + encodeURIComponent(model.id),
+            type: 'PUT',
+            url: this.urlRoot + '/' + encodeURIComponent(model.id),
             data: JSON.stringify(json)
         });
         return $.ajax(opts);
     };
 
     Couch.Model.prototype._delete = function(model, opts) {
-        var rev = model.get("rev");
-        var url = this.urlRoot + "/" + 
+        var rev = model.get('rev');
+        var url = this.urlRoot + '/' + 
             encodeURIComponent(model.id) + 
-            "?rev=" + encodeURIComponent(rev);
+            '?rev=' + encodeURIComponent(rev);
         _.extend(opts, ajax_options, {
             url: url,
-            type: "DELETE"
+            type: 'DELETE'
         });
         return $.ajax(opts); 
     };
@@ -127,13 +123,13 @@
     Couch.Model.prototype.sync = function(method, model, opts) {
         if (debug) console.info(method);
         switch (method) {
-        case "read":
+        case 'read':
             return this._read.call(this, model, opts);
-        case "create": 
+        case 'create': 
             return this._create.call(this, model, opts);
-        case "update":
+        case 'update':
             return this._update.call(this, model, opts);
-        case "delete":
+        case 'delete':
             return this._delete.call(this, model, opts);
         }
     };

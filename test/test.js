@@ -15,6 +15,24 @@ var assert = function(exp, message) {
 
 //test cases:
 
+var test_docs = [
+    {
+        "_id": "46755756ad993ec83e986891f000794c",
+        "_rev": "1-967a00dff5e02add41819138abb3284d",
+        "type": "test_collection"
+    }, 
+    {
+        "_id": "46755756ad993ec83e986891f0005a0e",
+        "_rev": "1-967a00dff5e02add41819138abb3284d",
+        "type": "test_collection"
+    },
+    {
+        "_id": "46755756ad993ec83e986891f000699f",
+        "_rev": "1-967a00dff5e02add41819138abb3284d",
+        "type": "test_collection"
+    }
+];
+
 var Model = Couch.Model.extend({
     urlRoot: '/test'
 });
@@ -28,14 +46,35 @@ suite('Collection from view', function() {
         }
     });
 
-    var collection = new Collection();
+    var collection = null;
 
     setup(function(done) {
-        collection.on('reset', function() {
-            this.off('reset');
-            done();
-        });
-        collection.fetch();
+        collection = new Collection();
+        var docs = {
+            all_or_nothing: true,
+            docs: test_docs
+        };
+        Couch.Bootstrap(docs, {url: '/test/_bulk_docs'})
+            .done(function() {
+                collection.on('reset', function() {
+                    this.off('reset');
+                    done();
+                });
+                collection.fetch();
+            });
+    });
+
+    teardown(function(done) {
+        var docs = {
+            all_or_nothing: true,
+            docs: _.map(test_docs, function(doc) {
+                return _.extend({_deleted: true}, doc);
+            })
+        };
+        Couch.Bootstrap(docs, {url: '/test/_bulk_docs'})
+            .done(function() {
+                done();
+            });
     });
 
     suite('collection', function() {
