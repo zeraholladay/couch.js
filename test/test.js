@@ -1,3 +1,5 @@
+//ghetto assert:
+
 var AssertException = function(msg) { 
     this.msg = msg;
     this.toString = function() {
@@ -11,6 +13,8 @@ var assert = function(exp, message) {
     }
 };
 
+//test cases:
+
 var Model = Couch.Model.extend({
     urlRoot: '/test'
 });
@@ -20,7 +24,7 @@ suite('Collection from view', function() {
         model: Model,
         // returns the URL of the couchdb view
         url: function() {
-            return '/test/_design/couchapp/_view/collection?key=' + encodeURI('"test_collection"');
+            return '_view/collection?key=' + encodeURI('"test_collection"');
         }
     });
 

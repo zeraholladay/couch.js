@@ -1,21 +1,21 @@
 (function() {
     var debug = true;
 
-    Couch = undefined;
+    Couch = {};
 
     //Node stuff for testing
 
-    var isNode = (typeof module !== 'undefined' && module.exports) || false;
+    // var isNode = (typeof module !== 'undefined' && module.exports) || false;
 
-    if (isNode) {
-        $ = require("jquery");
-        _ = require("underscore");
-        Backbone = require("backbone");
-        Backbone.setDomLibrary($);
-        Couch = exports;
-    } else {
-        Couch = {};
-    }
+    // if (isNode) {
+    //     $ = require("jquery");
+    //     _ = require("underscore");
+    //     Backbone = require("backbone");
+    //     Backbone.setDomLibrary($);
+    //     Couch = exports;
+    // } else {
+    //     Couch = {};
+    // }
 
     //User stuff
 
