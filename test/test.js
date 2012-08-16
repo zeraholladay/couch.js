@@ -53,7 +53,6 @@ suite('Collection fetched from a view', function() {
 
         var user = new Couch.User();
         var bootstrap = new Couch.Bootstrap();
-
         var docs = {
             all_or_nothing: true,
             docs: test_docs
@@ -74,7 +73,6 @@ suite('Collection fetched from a view', function() {
     teardown(function(done) {
         var user = new Couch.User();
         var bootstrap = new Couch.Bootstrap();
-
         var docs = {
             all_or_nothing: true,
             docs: _.map(test_docs, function(doc) {
@@ -117,6 +115,7 @@ suite('Collection', function() {
     var collection;
 
     setup(function(done) {
+        var user = new Couch.User();
         collection = new Collection();
         collection.on('sync', function(model) {
             assert(model.get("id") === model.id);
@@ -124,7 +123,11 @@ suite('Collection', function() {
             this.off('sync');
             done();
         });
-        collection.create({user:'test'});
+        user.on('login', function() {
+            collection.create({user:'test'});
+        });
+        user.login('test', '123');
+
     });
 
     teardown(function() {
