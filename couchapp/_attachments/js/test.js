@@ -37,7 +37,7 @@ var Model = Couch.Model.extend({
     urlRoot: '/test'
 });
 
-suite('Collection from view', function() {
+suite('Collection fetched from a view', function() {
     var Collection = Couch.Collection.extend({
         model: Model,
         // returns the URL of the couchdb view
@@ -78,15 +78,20 @@ suite('Collection from view', function() {
     });
 
     suite('collection', function() {
-        test('should contain three models.', function() {
+        test('should contain three bootstrapped models.', function() {
             assert(collection.length === 3);
         });
     });    
 
     suite('models', function() {
-        test('should not have an _id or _rev attribute.', function() {
-            assert(!collection.get("_id"));
-            assert(!collection.get("_rev"));
+        test('should not have an _id, _rev, or ok attribute.', function() {
+            var bool = collection.every(function(model) {
+                console.log(model.get("_id"));
+                return (undefined === model.get("_id") &&
+                        undefined === model.get("_rev") &&
+                        undefined === model.get("ok"));
+            });
+            assert(bool);
         });
     });    
 });
@@ -153,7 +158,7 @@ suite('Collection', function() {
 });
 
 suite('User', function() {
-    var user = new Couch.User('http://localhost:5984');
+    var user = new Couch.User();
 
     setup(function(done) {
         user.signup('test', '123')
