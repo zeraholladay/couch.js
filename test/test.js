@@ -1,3 +1,6 @@
+var username = 'test';
+var password = '123';
+
 //ghetto assert:
 
 var AssertException = function(msg) { 
@@ -50,7 +53,6 @@ suite('Collection fetched from a view', function() {
 
     setup(function(done) {
         collection = new Collection();
-
         var user = new Couch.User();
         var bootstrap = new Couch.Bootstrap();
         var docs = {
@@ -67,7 +69,7 @@ suite('Collection fetched from a view', function() {
         user.on('login', function() {
             bootstrap.loader(docs, {url: '/test/_bulk_docs'});
         });
-        user.login('test', '123');
+        user.login(username, password);
     });
 
     teardown(function(done) {
@@ -107,7 +109,7 @@ suite('Collection fetched from a view', function() {
     });    
 });
 
-suite('Collection', function() {
+suite('Models in a collection', function() {
     var Collection = Couch.Collection.extend({
         model: Model
     });
@@ -126,7 +128,7 @@ suite('Collection', function() {
         user.on('login', function() {
             collection.create({user:'test'});
         });
-        user.login('test', '123');
+        user.login(username, password);
 
     });
 
@@ -143,7 +145,7 @@ suite('Collection', function() {
         user.logout();
     });
 
-    suite('model.destroy', function() {
+    suite('destroy', function() {
         test('should delete an item.', function(done) {
             var model = collection.at(0);
             model.on('destroy', function(model) {
