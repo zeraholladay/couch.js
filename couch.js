@@ -26,7 +26,7 @@
                 url: this.url_prefix + '/_users',
                 data: JSON.stringify(user_doc)
             });
-            return $.ajax(opts);
+            return $.ajax(opts); //XXX: FIXME!!! ADD EVENT
         };
         this.login = function(username, password, opts) {
             opts = opts || {};
@@ -37,7 +37,7 @@
             });
             var that = this;
             return $.ajax(opts).done(function() {
-                that.trigger('login');
+                that.trigger('login'); //XXX: FIXME!!!
             });
         };
         this.logout = this.logoff = function(opts) {
@@ -48,7 +48,7 @@
             });
             var that = this;
             return $.ajax(opts).done(function() {
-                that.trigger('logout');
+                that.trigger('logout'); //XXX: FIXME!!!
             });
         };
     };
@@ -64,7 +64,7 @@
                 data: JSON.stringify(docs)
             });
             var that = this;
-            return $.ajax(opts).done(that.trigger('bootstrap'));
+            return $.ajax(opts).done(that.trigger('bootstrap')); //XXX: FIXME!!! MAYBE RENAME TOO.
         };
     };
 
