@@ -1,9 +1,7 @@
-couch.js
-========
+#couch.js
 
 Backbone interface to CouchDB.
 
-Getting Started
-=========
+##Getting Started
 
 To come.
