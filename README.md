@@ -1,4 +1,9 @@
 couch.js
 ========
 
-Demo code
+Backbone interface to CouchDB.
+
+Getting Started
+========
+
+To come.
