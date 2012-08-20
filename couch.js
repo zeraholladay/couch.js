@@ -21,24 +21,39 @@
                 type: 'user',
                 roles: []
             };
+            var success = _.bind(function(data, status, jqXHR) {
+                this.trigger('signup', null, data);
+            }, this);
+            var error = _.bind(function(jqXHR, status, err) {
+                var data = JSON.parse(err.responseText);
+                this.trigger('signup', err, data);
+            }, this);
             _.extend(opts, ajax_options, {
                 type: 'POST',
                 url: this.url_prefix + '/_users',
-                data: JSON.stringify(user_doc)
+                data: JSON.stringify(user_doc),
+                success: success,
+                error: error
             });
-            return $.ajax(opts); //XXX: FIXME!!! ADD EVENT
+            return $.ajax(opts);
         };
         this.login = function(username, password, opts) {
             opts = opts || {};
+            var success = _.bind(function(data, status, jqXHR) {
+                this.trigger('login', null, data);
+            }, this);
+            var error = _.bind(function(jqXHR, status, err) {
+                var data = JSON.parse(jqXHR.responseText);
+                this.trigger('login', err, data);
+            }, this);
             _.extend(opts, ajax_options, {
                 type: 'POST',
                 url: this.url_prefix + '/_session',
-                data: JSON.stringify({ name: username, password: password })
+                data: JSON.stringify({ name: username, password: password }),
+                success: success,
+                error: error
             });
-            var that = this;
-            return $.ajax(opts).done(function() {
-                that.trigger('login'); //XXX: FIXME!!!
-            });
+            return $.ajax(opts);
         };
         this.logout = this.logoff = function(opts) {
             opts = opts || {};

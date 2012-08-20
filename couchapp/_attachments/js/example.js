@@ -7,6 +7,7 @@ var LoginView = Backbone.View.extend({
     el: 'form#login',
     events: {
         'submit': 'submit',
+        'click a#logout': 'logout'
     },
     initialize: function() {
         _.bindAll(this, 'submit');
@@ -22,8 +23,14 @@ var LoginView = Backbone.View.extend({
         this.user.login(form.username, form.password);
         return false;
     },
-    login: function() {
-        alert('login');
+    login: function(err, data) {
+        if (err) {
+            alert(data.reason);
+        } 
+        return false;
+    },
+    logout: function() {
+        return false;
     }
 });
 
