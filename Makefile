@@ -14,4 +14,3 @@ test: setup
 	cp node_modules/mocha/mocha.js couchapp/_attachments/js/
 	cp couch.js test/test.js couchapp/_attachments/js/
 	couchapp push couchapp/ default
-

@@ -48,13 +48,28 @@ var Collection = Couch.Collection.extend({
     viewURL: '_view/collection?key=' + encodeURI('"test_collection"')
 });
 
+var Bootstrap = function() {
+    this.loader = function(docs, opts) {
+        _.extend(opts, { 
+            dataType: 'json',
+            contentType: 'application/json',
+            type: 'POST',
+            data: JSON.stringify(docs)
+        });
+        var that = this;
+        return $.ajax(opts).done(that.trigger('bootstrap')); //XXX: FIXME!!! MAYBE RENAME TOO.
+    };
+};
+
+_.extend(Bootstrap.prototype, Backbone.Events);
+
 suite('Collection fetched from a view', function() {
     var collection = null;
 
     setup(function(done) {
         collection = new Collection();
         var user = new Couch.User();
-        var bootstrap = new Couch.Bootstrap();
+        var bootstrap = new Bootstrap();
         var docs = {
             all_or_nothing: true,
             docs: test_docs
@@ -74,7 +89,7 @@ suite('Collection fetched from a view', function() {
 
     teardown(function(done) {
         var user = new Couch.User();
-        var bootstrap = new Couch.Bootstrap();
+        var bootstrap = new Bootstrap();
         var docs = {
             all_or_nothing: true,
             docs: _.map(test_docs, function(doc) {

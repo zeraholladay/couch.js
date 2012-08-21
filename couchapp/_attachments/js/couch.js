@@ -1,12 +1,12 @@
 (function() {
     var debug = true;
 
+    Couch = {};
+
     var ajax_options = { 
         dataType: 'json',
         contentType: 'application/json'
     };   
-
-    Couch = {};
 
     //User stuff
 
@@ -61,21 +61,6 @@
     };
 
     _.extend(Couch.User.prototype, Backbone.Events);
-
-    //Bootstrap (useful for testing)
-
-    Couch.Bootstrap = function() {
-        this.loader = function(docs, opts) {
-            _.extend(opts, ajax_options, {
-                type: 'POST',
-                data: JSON.stringify(docs)
-            });
-            var that = this;
-            return $.ajax(opts).done(that.trigger('bootstrap')); //XXX: FIXME!!! MAYBE RENAME TOO.
-        };
-    };
-
-    _.extend(Couch.Bootstrap.prototype, Backbone.Events);
 
     //Extend Model
 
