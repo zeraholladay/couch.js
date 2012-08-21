@@ -12,6 +12,13 @@
 
     Couch.User = function(url_prefix) {
         this.url_prefix = url_prefix || '';
+        this.success = function(event, data /*, status, jqXHR*/ ) {
+                this.trigger(event, null, data);
+        };
+        this.error = function(event, jqXHR, status, err) {
+                var data = JSON.parse(jqXHR.responseText);
+                this.trigger(event, err, data);
+        };
         this.signup = function(username, password, opts) {
             opts = opts || {};
             var user_doc = {
@@ -21,37 +28,23 @@
                 type: 'user',
                 roles: []
             };
-            var success = _.bind(function(data, status, jqXHR) {
-                this.trigger('signup', null, data);
-            }, this);
-            var error = _.bind(function(jqXHR, status, err) {
-                var data = JSON.parse(err.responseText);
-                this.trigger('signup', err, data);
-            }, this);
             _.extend(opts, ajax_options, {
                 type: 'POST',
                 url: this.url_prefix + '/_users',
                 data: JSON.stringify(user_doc),
-                success: success,
-                error: error
+                success: _.bind(this.success, this, 'signup'),
+                error: _.bind(this.error, this, 'signup')
             });
             return $.ajax(opts);
         };
         this.login = function(username, password, opts) {
             opts = opts || {};
-            var success = _.bind(function(data, status, jqXHR) {
-                this.trigger('login', null, data);
-            }, this);
-            var error = _.bind(function(jqXHR, status, err) {
-                var data = JSON.parse(jqXHR.responseText);
-                this.trigger('login', err, data);
-            }, this);
             _.extend(opts, ajax_options, {
                 type: 'POST',
                 url: this.url_prefix + '/_session',
                 data: JSON.stringify({ name: username, password: password }),
-                success: success,
-                error: error
+                success: _.bind(this.success, this, 'login'),
+                error: _.bind(this.error, this, 'login')
             });
             return $.ajax(opts);
         };
@@ -59,12 +52,11 @@
             opts = opts || {};
             _.extend(opts, ajax_options, {
                 type: 'DELETE',
-                url: this.url_prefix + '/_session'
+                url: this.url_prefix + '/_session',
+                success: _.bind(this.success, this, 'logout'),
+                error: _.bind(this.error, this, 'logout')
             });
-            var that = this;
-            return $.ajax(opts).done(function() {
-                that.trigger('logout'); //XXX: FIXME!!!
-            });
+            return $.ajax(opts);
         };
     };
 
