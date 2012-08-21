@@ -3,16 +3,16 @@ var password = '123';
 
 //ghetto assert:
 
-var AssertException = function(msg) { 
-    this.msg = msg;
-    this.toString = function() {
-        return 'Assert: ' + this.msg;
-    };
-};
+// var AssertException = function(msg) { 
+//     this.msg = msg;
+//     this.toString = function() {
+//         return 'Assert: ' + this.msg;
+//     };
+// };
 
 var assert = function(exp, message) {
     if (!exp) {
-        throw new AssertException(message);
+        throw msg;
     }
 };
 
@@ -36,19 +36,19 @@ var test_docs = [
     }
 ];
 
-var Model = Couch.Model.extend({
-    urlRoot: '/test'
+// Need tests for just model:
+//
+// var Model = Couch.Model.extend({
+//     //urlRoot: '/test'
+// });
+
+var Collection = Couch.Collection.extend({
+    model: Couch.Model,
+    url: '/test',
+    viewURL: '_view/collection?key=' + encodeURI('"test_collection"')
 });
 
 suite('Collection fetched from a view', function() {
-    var Collection = Couch.Collection.extend({
-        model: Model,
-        // returns the URL of the couchdb view
-        url: function() {
-            return '_view/collection?key=' + encodeURI('"test_collection"');
-        }
-    });
-
     var collection = null;
 
     setup(function(done) {
@@ -110,10 +110,6 @@ suite('Collection fetched from a view', function() {
 });
 
 suite('Models in a collection', function() {
-    var Collection = Couch.Collection.extend({
-        model: Model
-    });
-
     var collection;
 
     setup(function(done) {
@@ -149,11 +145,11 @@ suite('Models in a collection', function() {
         test('should delete an item.', function(done) {
             var model = collection.at(0);
             model.on('destroy', function(model) {
+                collection.remove(model);
                 assert(collection.length === 0);
                 this.off('destroy');
                 done();
             });
-            collection.remove(model);
             model.destroy();
         });
     });

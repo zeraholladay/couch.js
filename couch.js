@@ -105,62 +105,73 @@
 
     //Define methods for sync
 
-    Couch.Model.prototype._read = function(model, opts) {
-        if (undefined === model.id) throw 'Model has no ID';
-        var url = this.urlRoot + '/' + encodeURIComponent(model.id);
+    var _view = function(collection, opts) {
         _.extend(opts, ajax_options, {
             type: 'GET',
-            url: url
+            url: collection.viewURL
         });
         return $.ajax(opts);
     };
 
-    Couch.Model.prototype._create = function(model, opts) {
+    var _read = function(model, opts) {
+        if (undefined === model.id) throw 'Model has no ID';
+        _.extend(opts, ajax_options, {
+            type: 'GET',
+            url: this.url()
+        });
+        return $.ajax(opts);
+    };
+
+    var _create = function(model, opts) {
         _.extend(opts, ajax_options, {
             type: 'POST',
-            url: this.urlRoot,
+            url: this.url(),
             data: JSON.stringify(model.toJSON())
         });
         return $.ajax(opts);
     };
 
-    Couch.Model.prototype._update = function(model, opts) {
+    var _update = function(model, opts) {
         var json = model.toJSON();
         json._id = json.id; delete json.id;
         json._rev = json.rev; delete json.rev;
         _.extend(opts, ajax_options, {
             type: 'PUT',
-            url: this.urlRoot + '/' + encodeURIComponent(model.id),
+            url: this.url(),
             data: JSON.stringify(json)
         });
         return $.ajax(opts);
     };
 
-    Couch.Model.prototype._delete = function(model, opts) {
+    var _delete = function(model, opts) {
         var rev = model.get('rev');
-        var url = this.urlRoot + '/' + 
-            encodeURIComponent(model.id) + 
-            '?rev=' + encodeURIComponent(rev);
         _.extend(opts, ajax_options, {
-            url: url,
+            url: this.url() + '?rev=' + encodeURIComponent(rev),
             type: 'DELETE'
         });
         return $.ajax(opts); 
     };
 
-    Couch.Model.prototype.sync = function(method, model, opts) {
+    Couch.sync = function(method, model, opts) {
         if (debug) console.info(method);
         switch (method) {
         case 'read':
-            return this._read.call(this, model, opts);
+            if (!model.id) { 
+                //XXX: model is actually a collection
+                //in collection.fetch().
+                return _view.call(this, model, opts); 
+            }
+            return _read.call(this, model, opts);
         case 'create': 
-            return this._create.call(this, model, opts);
+            return _create.call(this, model, opts);
         case 'update':
-            return this._update.call(this, model, opts);
+            return _update.call(this, model, opts);
         case 'delete':
-            return this._delete.call(this, model, opts);
+            return _delete.call(this, model, opts);
         }
     };
+
+    Backbone.sync = Couch.sync;
 
     //Collection
 
