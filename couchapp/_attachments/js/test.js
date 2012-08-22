@@ -3,14 +3,7 @@ var password = '123';
 
 //ghetto assert:
 
-// var AssertException = function(msg) { 
-//     this.msg = msg;
-//     this.toString = function() {
-//         return 'Assert: ' + this.msg;
-//     };
-// };
-
-var assert = function(exp, message) {
+var assert = function(exp, msg) {
     if (!exp) {
         throw msg;
     }
