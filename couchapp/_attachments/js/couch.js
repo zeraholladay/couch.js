@@ -83,9 +83,12 @@
     //Define methods for sync
 
     var _view = function(collection, opts) {
+        var url = (_.isFunction(collection.viewURL)) ?
+                   collection.viewURL() :
+                   collection.viewURL;
         _.extend(opts, ajax_options, {
             type: 'GET',
-            url: collection.viewURL
+            url: url
         });
         return $.ajax(opts);
     };
