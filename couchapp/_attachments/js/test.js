@@ -36,7 +36,6 @@ var test_docs = [
 // });
 
 var Collection = Couch.Collection.extend({
-    model: Couch.Model,
     url: '/test',
     viewURL: '_view/collection?key=' + encodeURI('"test_collection"')
 });

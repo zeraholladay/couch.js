@@ -156,6 +156,7 @@
     //Collection
 
     Couch.Collection = Backbone.Collection.extend({
+        model: Couch.Model,
         parse : function(json) {
             var parsed = _.map(json.rows, function(row) {
                 return row.value; 
