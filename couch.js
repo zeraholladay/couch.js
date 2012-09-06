@@ -3,7 +3,7 @@
 
     Couch = {};
 
-    var ajax_options = { 
+    Couch.ajax_options = { 
         dataType: 'json',
         contentType: 'application/json'
     };   
@@ -28,7 +28,7 @@
                 type: 'user',
                 roles: []
             };
-            _.extend(opts, ajax_options, {
+            _.extend(opts, Couch.ajax_options, {
                 type: 'POST',
                 url: this.url_prefix + '/_users',
                 data: JSON.stringify(user_doc),
@@ -39,7 +39,7 @@
         };
         this.login = function(username, password, opts) {
             opts = opts || {};
-            _.extend(opts, ajax_options, {
+            _.extend(opts, Couch.ajax_options, {
                 type: 'POST',
                 url: this.url_prefix + '/_session',
                 data: JSON.stringify({ name: username, password: password }),
@@ -50,7 +50,7 @@
         };
         this.logout = this.logoff = function(opts) {
             opts = opts || {};
-            _.extend(opts, ajax_options, {
+            _.extend(opts, Couch.ajax_options, {
                 type: 'DELETE',
                 url: this.url_prefix + '/_session',
                 success: _.bind(this.success, this, 'logout'),
@@ -86,7 +86,7 @@
         var url = (_.isFunction(collection.viewURL)) ?
                    collection.viewURL() :
                    collection.viewURL;
-        _.extend(opts, ajax_options, {
+        _.extend(opts, Couch.ajax_options, {
             type: 'GET',
             url: url
         });
@@ -95,7 +95,7 @@
 
     var _read = function(model, opts) {
         if (undefined === model.id) throw 'Model has no ID';
-        _.extend(opts, ajax_options, {
+        _.extend(opts, Couch.ajax_options, {
             type: 'GET',
             url: this.url()
         });
@@ -103,7 +103,7 @@
     };
 
     var _create = function(model, opts) {
-        _.extend(opts, ajax_options, {
+        _.extend(opts, Couch.ajax_options, {
             type: 'POST',
             url: this.url(),
             data: JSON.stringify(model.toJSON())
@@ -115,7 +115,7 @@
         var json = model.toJSON();
         json._id = json.id; delete json.id;
         json._rev = json.rev; delete json.rev;
-        _.extend(opts, ajax_options, {
+        _.extend(opts, Couch.ajax_options, {
             type: 'PUT',
             url: this.url(),
             data: JSON.stringify(json)
@@ -125,7 +125,7 @@
 
     var _delete = function(model, opts) {
         var rev = model.get('rev');
-        _.extend(opts, ajax_options, {
+        _.extend(opts, Couch.ajax_options, {
             url: this.url() + '?rev=' + encodeURIComponent(rev),
             type: 'DELETE'
         });
