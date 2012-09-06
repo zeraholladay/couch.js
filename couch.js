@@ -10,8 +10,7 @@
 
     //User stuff
 
-    Couch.User = function(url_prefix) {
-        this.url_prefix = url_prefix || '';
+    Couch.User = function() {
         this.success = function(event, data /*, status, jqXHR*/ ) {
                 this.trigger(event, null, data);
         };
@@ -30,7 +29,7 @@
             };
             _.extend(opts, Couch.ajax_options, {
                 type: 'POST',
-                url: this.url_prefix + '/_users',
+                url: '/_users',
                 data: JSON.stringify(user_doc),
                 success: _.bind(this.success, this, 'signup'),
                 error: _.bind(this.error, this, 'signup')
@@ -41,7 +40,7 @@
             opts = opts || {};
             _.extend(opts, Couch.ajax_options, {
                 type: 'POST',
-                url: this.url_prefix + '/_session',
+                url: '/_session',
                 data: JSON.stringify({ name: username, password: password }),
                 success: _.bind(this.success, this, 'login'),
                 error: _.bind(this.error, this, 'login')
@@ -52,7 +51,7 @@
             opts = opts || {};
             _.extend(opts, Couch.ajax_options, {
                 type: 'DELETE',
-                url: this.url_prefix + '/_session',
+                url: '/_session',
                 success: _.bind(this.success, this, 'logout'),
                 error: _.bind(this.error, this, 'logout')
             });
