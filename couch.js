@@ -10,56 +10,41 @@
 
     //User stuff
 
-    Couch.User = function() {
-        this.success = function(event, data /*, status, jqXHR*/ ) {
-                this.trigger(event, null, data);
+    Couch.signup = function(username, password, opts) {
+        opts = opts || {};
+        var user_doc = {
+            _id : 'org.couchdb.user:' + username,
+            name: username,
+            password: password,
+            type: 'user',
+            roles: []
         };
-        this.error = function(event, jqXHR, status, err) {
-                var data = JSON.parse(jqXHR.responseText);
-                this.trigger(event, err, data);
-        };
-        this.signup = function(username, password, opts) {
-            opts = opts || {};
-            var user_doc = {
-                _id : 'org.couchdb.user:' + username,
-                name: username,
-                password: password,
-                type: 'user',
-                roles: []
-            };
-            _.extend(opts, Couch.ajax_options, {
-                type: 'POST',
-                url: '/_users',
-                data: JSON.stringify(user_doc),
-                success: _.bind(this.success, this, 'signup'),
-                error: _.bind(this.error, this, 'signup')
-            });
-            return $.ajax(opts);
-        };
-        this.login = function(username, password, opts) {
-            opts = opts || {};
-            _.extend(opts, Couch.ajax_options, {
-                type: 'POST',
-                url: '/_session',
-                data: JSON.stringify({ name: username, password: password }),
-                success: _.bind(this.success, this, 'login'),
-                error: _.bind(this.error, this, 'login')
-            });
-            return $.ajax(opts);
-        };
-        this.logout = this.logoff = function(opts) {
-            opts = opts || {};
-            _.extend(opts, Couch.ajax_options, {
-                type: 'DELETE',
-                url: '/_session',
-                success: _.bind(this.success, this, 'logout'),
-                error: _.bind(this.error, this, 'logout')
-            });
-            return $.ajax(opts);
-        };
+        _.extend(opts, Couch.ajax_options, {
+            type: 'POST',
+            url: '/_users',
+            data: JSON.stringify(user_doc)
+        });
+        return $.ajax(opts);
     };
 
-    _.extend(Couch.User.prototype, Backbone.Events);
+    Couch.login = function(username, password, opts) {
+        opts = opts || {};
+        _.extend(opts, Couch.ajax_options, {
+            type: 'POST',
+            url: '/_session',
+            data: JSON.stringify({ name: username, password: password })
+        });
+        return $.ajax(opts);
+    };
+
+    Couch.logout = this.logoff = function(opts) {
+        opts = opts || {};
+        _.extend(opts, Couch.ajax_options, {
+            type: 'DELETE',
+            url: '/_session'
+        });
+        return $.ajax(opts);
+    };
 
     //Extend Model
 

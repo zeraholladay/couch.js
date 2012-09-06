@@ -60,7 +60,6 @@ suite('Collection fetched from a view', function() {
 
     setup(function(done) {
         collection = new Collection();
-        var user = new Couch.User();
         var bootstrap = new Bootstrap();
         var docs = {
             all_or_nothing: true,
@@ -73,14 +72,12 @@ suite('Collection fetched from a view', function() {
         bootstrap.on('bootstrap', function() {
             collection.fetch(); //fires reset
         });
-        user.on('login', function() {
+        Couch.login(username, password).done(function() {
             bootstrap.loader(docs, {url: '/test/_bulk_docs'});
         });
-        user.login(username, password);
     });
 
     teardown(function(done) {
-        var user = new Couch.User();
         var bootstrap = new Bootstrap();
         var docs = {
             all_or_nothing: true,
@@ -89,7 +86,7 @@ suite('Collection fetched from a view', function() {
             })
         };
         bootstrap.on('bootstrap', function() {
-            user.logout();
+            Couch.logout();
         });
 
         bootstrap.loader(docs, {url: '/test/_bulk_docs'})
@@ -120,7 +117,7 @@ suite('Models in a collection', function() {
     var collection;
 
     setup(function(done) {
-        var user = new Couch.User();
+        //var user = new Couch.User();
         collection = new Collection();
         collection.on('sync', function(model) {
             assert(model.get("id") === model.id);
@@ -128,11 +125,9 @@ suite('Models in a collection', function() {
             this.off('sync');
             done();
         });
-        user.on('login', function() {
+        Couch.login(username, password).done(function() {
             collection.create({user:'test'});
         });
-        user.login(username, password);
-
     });
 
     teardown(function(done) {
@@ -141,11 +136,9 @@ suite('Models in a collection', function() {
             model.destroy();
         });
         collection = null;
-        var user = new Couch.User();
-        user.on('logout', function() {
+        Couch.logout().done(function() {
             done();
         });
-        user.logout();
     });
 
     suite('destroy', function() {
