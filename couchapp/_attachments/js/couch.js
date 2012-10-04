@@ -37,7 +37,7 @@
         return $.ajax(opts);
     };
 
-    Couch.logout = this.logoff = function(opts) {
+    Couch.logout = Couch.logoff = function(opts) {
         opts = opts || {};
         _.extend(opts, Couch.ajax_options, {
             type: 'DELETE',
