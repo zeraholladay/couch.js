@@ -1,6 +1,11 @@
 var username = 'test';
 var password = '123';
 
+$.ajaxSetup({
+    username: username,
+    password: password
+});
+
 //ghetto assert:
 
 var assert = function(exp, msg) {
@@ -72,9 +77,10 @@ suite('Collection fetched from a view', function() {
         bootstrap.on('bootstrap', function() {
             collection.fetch(); //fires reset
         });
-        Couch.login(username, password).done(function() {
-            bootstrap.loader(docs, {url: '/test/_bulk_docs'});
-        });
+        // Couch.login(username, password).done(function() {
+        //     bootstrap.loader(docs, {url: '/test/_bulk_docs'});
+        // });
+        bootstrap.loader(docs, {url: '/test/_bulk_docs'});
     });
 
     teardown(function(done) {
@@ -85,9 +91,9 @@ suite('Collection fetched from a view', function() {
                 return _.extend({_deleted: true}, doc);
             })
         };
-        bootstrap.on('bootstrap', function() {
-            Couch.logout();
-        });
+        // bootstrap.on('bootstrap', function() {
+        //     Couch.logout();
+        // });
 
         bootstrap.loader(docs, {url: '/test/_bulk_docs'})
             .done(function() {
@@ -125,9 +131,10 @@ suite('Models in a collection', function() {
             this.off('sync');
             done();
         });
-        Couch.login(username, password).done(function() {
-            collection.create({user:'test'});
-        });
+        // Couch.login(username, password).done(function() {
+        //     collection.create({user:'test'});
+        // });
+        collection.create({user:'test'});
     });
 
     teardown(function(done) {
@@ -136,9 +143,10 @@ suite('Models in a collection', function() {
             model.destroy();
         });
         collection = null;
-        Couch.logout().done(function() {
-            done();
-        });
+        done();
+        // Couch.logout().done(function() {
+        //     done();
+        // });
     });
 
     suite('destroy', function() {

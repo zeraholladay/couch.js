@@ -10,41 +10,41 @@
 
     //User stuff
 
-    Couch.signup = function(username, password, opts) {
-        opts = opts || {};
-        var user_doc = {
-            _id : 'org.couchdb.user:' + username,
-            name: username,
-            password: password,
-            type: 'user',
-            roles: []
-        };
-        _.extend(opts, Couch.ajax_options, {
-            type: 'POST',
-            url: '/_users',
-            data: JSON.stringify(user_doc)
-        });
-        return $.ajax(opts);
-    };
+    // Couch.signup = function(username, password, opts) {
+    //     opts = opts || {};
+    //     var user_doc = {
+    //         _id : 'org.couchdb.user:' + username,
+    //         name: username,
+    //         password: password,
+    //         type: 'user',
+    //         roles: []
+    //     };
+    //     _.extend(opts, Couch.ajax_options, {
+    //         type: 'POST',
+    //         url: '/_users',
+    //         data: JSON.stringify(user_doc)
+    //     });
+    //     return $.ajax(opts);
+    // };
 
-    Couch.login = function(username, password, opts) {
-        opts = opts || {};
-        _.extend(opts, Couch.ajax_options, {
-            type: 'POST',
-            url: '/_session',
-            data: JSON.stringify({ name: username, password: password })
-        });
-        return $.ajax(opts);
-    };
+    // Couch.login = function(username, password, opts) {
+    //     opts = opts || {};
+    //     _.extend(opts, Couch.ajax_options, {
+    //         type: 'POST',
+    //         url: '/_session',
+    //         data: JSON.stringify({ name: username, password: password })
+    //     });
+    //     return $.ajax(opts);
+    // };
 
-    Couch.logout = Couch.logoff = function(opts) {
-        opts = opts || {};
-        _.extend(opts, Couch.ajax_options, {
-            type: 'DELETE',
-            url: '/_session'
-        });
-        return $.ajax(opts);
-    };
+    // Couch.logout = Couch.logoff = function(opts) {
+    //     opts = opts || {};
+    //     _.extend(opts, Couch.ajax_options, {
+    //         type: 'DELETE',
+    //         url: '/_session'
+    //     });
+    //     return $.ajax(opts);
+    // };
 
     //Extend Model
 
